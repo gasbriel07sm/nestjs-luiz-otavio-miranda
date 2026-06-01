@@ -1,4 +1,5 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 
 @Controller('recados')
 export class RecadosController {
@@ -13,7 +14,7 @@ export class RecadosController {
   }
 
   @Post()
-  create() {
-    return `Essa rota cria um recado`;
+  create(@Body() body: any) {
+    return body;
   }
 }
