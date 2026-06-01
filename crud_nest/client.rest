@@ -5,3 +5,5 @@
 GET {{baseUrl}}/recados
 ###
 GET {{baseUrl}}/recados/232132
+###
+POST {{baseUrl}}/recados
