@@ -2,6 +2,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -9,15 +10,6 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-
-// CRUD
-// Create - POST
-// Read - GET
-// UPDATE - PATCH / PUT
-// DELETE - DELETE
-
-// PATCH - utilizado para atualizar dados de um recurso
-// PUT - utilizado para atualizar um recurso inteiro
 
 @Controller('recados')
 export class RecadosController {
@@ -43,5 +35,10 @@ export class RecadosController {
       id,
       ...body,
     };
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return `Removido o recado de id: ${id}`;
   }
 }
