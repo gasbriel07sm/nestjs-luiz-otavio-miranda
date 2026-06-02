@@ -5,11 +5,19 @@
 GET {{baseUrl}}/recados
 ###
 GET {{baseUrl}}/recados/232132
-###
+### CRIA UM RECADO
 POST {{baseUrl}}/recados
 Content-Type: application/json
 
 {
   "recado": "Este é o recado que estou enviando",
   "nova-chave": "Outro valor"
+}
+### ATUALIZA UM RECADO
+PATCH  {{baseUrl}}/recados/2
+Content-Type: application/json
+
+{
+  "recado": "Este é o recado que estou enviando",
+  "atualizar": true
 }
