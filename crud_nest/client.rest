@@ -2,7 +2,9 @@
 
 # RECADOS
 ###
-GET {{baseUrl}}/recados
+GET {{baseUrl}}/recados/
+?limit=20
+&offset=20
 ###
 GET {{baseUrl}}/recados/232132
 ### CRIA UM RECADO

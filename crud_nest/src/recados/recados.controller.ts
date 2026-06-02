@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
   Body,
@@ -9,14 +10,16 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 
 @Controller('recados')
 export class RecadosController {
   @HttpCode(HttpStatus.OK)
   @Get()
-  findAll() {
-    return 'Retorna todos os recados';
+  findAll(@Query() pagination: any) {
+    const { limit = 10, offset = 0 } = pagination;
+    return `Retirba todos os reacados. Limit: ${limit}, Offset: ${offset}`;
   }
 
   @Get(':id')
