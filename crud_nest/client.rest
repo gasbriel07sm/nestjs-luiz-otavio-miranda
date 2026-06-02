@@ -12,11 +12,9 @@ POST {{baseUrl}}/recados
 Content-Type: application/json
 
 {
-  "texto": "Novo recado",
-  "de": "João",
-  "para": "Maria",
-  "lido": false,
-  "data": "2026-06-02T11:22:55.830Z"
+  "texto": "4 Novo Recado",
+  "de": "joana",
+  "para": "joao"
 }
 ### ATUALIZA UM RECADO
 PATCH  {{baseUrl}}/recados/2

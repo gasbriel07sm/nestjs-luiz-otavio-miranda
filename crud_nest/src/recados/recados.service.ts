@@ -43,6 +43,8 @@ export class RecadosService {
       data: new Date(),
     };
     this.recados.push(novoRecado);
+
+    return novoRecado;
   }
 
   update(id: string, updateRecadoDto: UpdateRecadoDto) {
