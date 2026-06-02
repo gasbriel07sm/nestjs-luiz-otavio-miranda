@@ -14,16 +14,14 @@ Content-Type: application/json
 {
   "texto": "4 Novo Recado",
   "de": "joana",
-  "para": "joao",
-  "blabla": "blabla"
+  "para": "joao"
 }
 ### ATUALIZA UM RECADO
 PATCH  {{baseUrl}}/recados/2
 Content-Type: application/json
 
 {
-  "texto": "ATUALIZAR é um recado de teste",
-  "blabla": "blabla"
+  "texto": "ATUALIZAR é um recado de teste"
 }
 ### APAGANDO UM RECADO
 DELETE {{baseUrl}}/recados/2

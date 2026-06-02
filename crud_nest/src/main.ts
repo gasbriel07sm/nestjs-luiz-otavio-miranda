@@ -9,6 +9,7 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true, // remove chaves que não estão no DTO
       forbidNonWhitelisted: true, // retorna erro se tiver chaves que não estão no DTO
+      transform: false, // transforma os tipos de acordo com o DTO
     }),
   );
 
