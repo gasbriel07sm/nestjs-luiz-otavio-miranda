@@ -1,12 +1,38 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreatePessoaDto } from './dto/create-pessoa.dto';
 import { UpdatePessoaDto } from './dto/update-pessoa.dto';
+import { Pessoa } from './entities/pessoa.entity';
 
 @Injectable()
 export class PessoasService {
-  create(createPessoaDto: CreatePessoaDto) {
-    return 'This action adds a new pessoa';
+  constructor(
+    @InjectRepository(Pessoa)
+    private readonly pessoaRepository: Repository<Pessoa>,
+  ) {}
+
+  async create(createPessoaDto: CreatePessoaDto) {
+    try {
+      const dadosPessoa = {
+        nome: createPessoaDto.nome,
+        passwordHash: createPessoaDto.password,
+        email: createPessoaDto.email,
+      };
+
+      const novaPessoa = this.pessoaRepository.create(dadosPessoa);
+      await this.pessoaRepository.save(novaPessoa);
+      return novaPessoa;
+    } catch (error) {
+      if ((error as any).code === '23505') {
+        throw new ConflictException('Email já cadastrado!');
+      }
+
+      throw error;
+    }
   }
 
   findAll() {
