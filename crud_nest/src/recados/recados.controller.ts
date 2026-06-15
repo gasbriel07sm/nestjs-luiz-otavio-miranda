@@ -21,8 +21,6 @@ export class RecadosController {
   @HttpCode(HttpStatus.OK)
   @Get()
   findAll() {
-    // const { limit = 10, offset = 0 } = pagination;
-    // return `Retirba todos os reacados. Limit: ${limit}, Offset: ${offset}`;
     return this.recadosService.findAll();
   }
 
