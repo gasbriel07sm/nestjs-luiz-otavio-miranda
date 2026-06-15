@@ -1,10 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { Recado } from './entities/recado.entity';
 
 @Injectable()
 export class RecadosService {
+  constructor(
+    @InjectRepository(Recado)
+    private readonly recadoRepository: Repository<Recado>,
+  ) {}
+
   private lastId = 1;
   private recados: Recado[] = [
     {
@@ -17,16 +24,21 @@ export class RecadosService {
     },
   ];
 
-  findAll() {
-    return this.recados;
+  async findAll() {
+    const recados = await this.recadoRepository.find();
+    return recados;
   }
 
-  findOne(id: number) {
-    const recado = this.recados.find((recado) => recado.id === id);
+  async findOne(id: number) {
+    // const recado = this.recados.find(recado => recado.id === id);
+    const recado = await this.recadoRepository.findOne({
+      where: {
+        id,
+      },
+    });
 
     if (recado) return recado;
 
-    //throw new HttpException(`Recado não encontrado`, HttpStatus.NOT_FOUND);
     throw new NotFoundException(`Recado não encontrado`);
   }
 
@@ -45,9 +57,7 @@ export class RecadosService {
   }
 
   update(id: number, updateRecadoDto: UpdateRecadoDto) {
-    const recadoExistenteIndex = this.recados.findIndex(
-      (item) => item.id === id,
-    );
+    const recadoExistenteIndex = this.recados.findIndex(item => item.id === id);
 
     if (recadoExistenteIndex < 0) {
       throw new NotFoundException(`Recado não encontrado`);
@@ -63,9 +73,7 @@ export class RecadosService {
   }
 
   remove(id: number) {
-    const recadoExistenteIndex = this.recados.findIndex(
-      (item) => item.id === id,
-    );
+    const recadoExistenteIndex = this.recados.findIndex(item => item.id === id);
 
     if (recadoExistenteIndex < 0) {
       throw new NotFoundException(`Recado não encontrado`);
