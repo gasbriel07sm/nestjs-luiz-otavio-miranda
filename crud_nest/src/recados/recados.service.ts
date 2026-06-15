@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/await-thenable */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -30,7 +31,6 @@ export class RecadosService {
   }
 
   async findOne(id: number) {
-    // const recado = this.recados.find(recado => recado.id === id);
     const recado = await this.recadoRepository.findOne({
       where: {
         id,
@@ -42,18 +42,15 @@ export class RecadosService {
     throw new NotFoundException(`Recado não encontrado`);
   }
 
-  create(createRecadoDto: CreateRecadoDto) {
-    this.lastId++;
-    const id = this.lastId;
+  async create(createRecadoDto: CreateRecadoDto) {
     const novoRecado = {
-      id,
       ...createRecadoDto,
       lido: false,
       data: new Date(),
     };
-    this.recados.push(novoRecado);
 
-    return novoRecado;
+    const recado = await this.recadoRepository.create(novoRecado);
+    return this.recadoRepository.save(recado);
   }
 
   update(id: number, updateRecadoDto: UpdateRecadoDto) {
@@ -72,15 +69,13 @@ export class RecadosService {
     return this.recados[recadoExistenteIndex];
   }
 
-  remove(id: number) {
-    const recadoExistenteIndex = this.recados.findIndex(item => item.id === id);
+  async remove(id: number) {
+    const recado = await this.recadoRepository.findOneBy({
+      id,
+    });
 
-    if (recadoExistenteIndex < 0) {
-      throw new NotFoundException(`Recado não encontrado`);
-    }
+    if (!recado) throw new NotFoundException(`Recado não encontrado`);
 
-    const recado = this.recados.splice(recadoExistenteIndex, 1);
-
-    return recado;
+    return this.recadoRepository.remove(recado);
   }
 }
