@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RecadosModule } from '../recados/recados.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { PessoasModule } from '../pessoas/pessoas.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AppService } from './app.service';
       synchronize: true, // Sincroniza com o Banco de Dados, não deve ser usado em produção
     }),
     RecadosModule,
+    PessoasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
