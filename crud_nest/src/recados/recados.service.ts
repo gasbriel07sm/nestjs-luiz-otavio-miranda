@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/await-thenable */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { PaginationDto } from '../common/dto/pagination.dto';
 import { PessoasService } from '../pessoas/pessoas.service';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
@@ -15,8 +17,11 @@ export class RecadosService {
     private readonly pessoasService: PessoasService,
   ) {}
 
-  async findAll() {
+  async findAll(paginationDto?: PaginationDto) {
+    const { limit = 10, offset = 0 } = paginationDto ?? {};
     const recados = await this.recadoRepository.find({
+      take: limit, // quantos registros serão exibidos
+      skip: offset, // qauntos registros serão pulados
       relations: {
         de: true,
         para: true,
