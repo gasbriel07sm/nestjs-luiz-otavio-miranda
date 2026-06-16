@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreatePessoaDto } from './dto/create-pessoa.dto';
@@ -27,7 +28,8 @@ export class PessoasService {
       await this.pessoaRepository.save(novaPessoa);
       return novaPessoa;
     } catch (error) {
-      if ((error as any).code === '23505') {
+      const conflictError = error as { code?: string };
+      if (conflictError.code === '23505') {
         throw new ConflictException('Email já cadastrado!');
       }
 
@@ -35,19 +37,46 @@ export class PessoasService {
     }
   }
 
-  findAll() {
-    return `This action returns all pessoas`;
+  async findAll() {
+    const pessoas = await this.pessoaRepository.find();
+    return pessoas;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} pessoa`;
+  async findOne(id: number) {
+    const pessoa = await this.pessoaRepository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (pessoa) return pessoa;
+
+    throw new NotFoundException('Pessoa não encontrada');
   }
 
-  update(id: number, updatePessoaDto: UpdatePessoaDto) {
-    return `This action updates a #${id} pessoa`;
+  async update(id: number, updatePessoaDto: UpdatePessoaDto) {
+    const dadosPessoa = {
+      nome: updatePessoaDto?.nome,
+      password: updatePessoaDto?.password,
+    };
+
+    const pessoa = await this.pessoaRepository.preload({
+      id,
+      ...dadosPessoa,
+    });
+
+    if (!pessoa) throw new NotFoundException('Pessoa não encontrada');
+
+    return this.pessoaRepository.save(pessoa);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} pessoa`;
+  async remove(id: number) {
+    const pessoa = await this.pessoaRepository.findOneBy({
+      id,
+    });
+
+    if (!pessoa) throw new NotFoundException('Pessoa não encontrada');
+
+    return this.pessoaRepository.remove(pessoa);
   }
 }
