@@ -3,9 +3,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Recado } from '../../recados/entities/recado.entity';
 
 @Entity()
 export class Pessoa {
@@ -27,4 +29,10 @@ export class Pessoa {
 
   @UpdateDateColumn()
   updatedAt?: Date;
+
+  @OneToMany(() => Recado, recado => recado.de)
+  recadosEnviados!: Recado[];
+
+  @OneToMany(() => Recado, recado => recado.para)
+  recadosRecebidos!: Recado[];
 }
